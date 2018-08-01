@@ -1,0 +1,25 @@
+<html>
+
+<head>
+    <title>Sequitur</title>
+    <link rel="stylesheet" href="treant-js-master/Treant.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="treant-js-master/vendor/jquery.min.js"></script>
+
+
+</head>
+
+<div id="input-div">
+    <textarea id="input" cols="60" rows="10"></textarea>
+</div>
+<div id="output"></div>
+<svg></svg>
+<script src="treant-js-master/vendor/raphael.js"></script>
+<script src="treant-js-master/Treant.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="script.js"></script>
+
+<script>
+    main();
+    $('#input').bind('input propertychange', main); 
+</script>
