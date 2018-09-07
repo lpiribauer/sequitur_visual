@@ -1,0 +1,156 @@
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+form,
+fieldset,
+input,
+textarea,
+p,
+blockquote,
+th,
+td {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #fff;
+    font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
+    color: #444444;
+}
+
+#input {
+    width: 100%;
+    height: 100px;
+
+}
+
+#input-text {
+    height: 100px;
+    overflow-y: scroll;
+}
+
+.controls {
+    text-align: center;
+}
+
+.control {
+    font-size: 2em;
+    margin: 10px 30px;
+}
+
+.control:hover {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.pointer {
+    background-color: red;
+    color: white;
+}
+
+#output {
+    font-family: monospace;
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.right-container {
+    border-left: solid 1px;
+}
+
+.left-container {
+    height: 100vh;
+}
+
+.input-container {
+    height: 20vh;
+    padding: 10px;
+    border-bottom: solid 1px;
+}
+
+.rule{
+    display: block;
+    position: relative;
+    width: 100%;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+}
+
+.expand{
+    white-space: normal;
+
+}
+
+.rule:hover{
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.tree {
+    height: 65vh;
+    overflow: hidden;
+}
+
+.tree-controls{
+    width: 25%;
+    float: left;
+}
+
+.tree-control{
+    float: left;
+}
+
+.slidecontainer{
+    width: 70%;
+    float: left;
+    padding-left: 5%;
+}
+
+#tree-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.node {
+    font-size: 1em;
+}
+
+.node circle {
+    stroke: steelblue;
+    stroke-width: 3px;
+}
+
+.leaf circle {
+    stroke: lawngreen;
+}
+
+.node text {
+    font: 12px sans-serif;
+    color: #FFF;
+}
+
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+}

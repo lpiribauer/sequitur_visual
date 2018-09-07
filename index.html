@@ -1,25 +1,154 @@
+<!DOCTYPE html>
 <html>
 
 <head>
     <title>Sequitur</title>
-    <link rel="stylesheet" href="treant-js-master/Treant.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="treant-js-master/vendor/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
 
 
 </head>
 
-<div id="input-div">
-    <textarea id="input" cols="60" rows="10"></textarea>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-8 left-container">
+            <div class="input-container">
+                <div id="input-div">
+                    <textarea id="input"></textarea>
+                </div>
+                <p id="input-text" class="hidden">
+
+                </p>
+                <div class="controls">
+                    <span class="control glyphicon glyphicon-fast-backward" id="fast-back"></span>
+                    <span class="control glyphicon glyphicon-step-backward" id="step-back"></span>
+                    <span class="control glyphicon glyphicon-ok" id="edit-text"></span>
+                    <span class="control glyphicon glyphicon-step-forward" id="step-forward"></span>
+                    <span class="control glyphicon glyphicon-fast-forward" id="fast-forward"></span>
+                </div>
+            </div>
+            <div class="tree">
+            </div>
+            <div class="tree-controls-wrapper">
+                <div class="tree-controls">
+                    <input id="printTree" checked class="tree-control" type="checkbox" name="root">Print Tree<br>
+                    <input id="showRoot" checked class="tree-control" type="checkbox" name="root">Show Root<br>
+                    <input id="alignTerminals" checked class="tree-control" type="checkbox" name="terminals">Align
+                    Terminals
+                    <a id="download">Download Tree</a>
+                </div>
+                <div class="slidecontainer">
+                    <label for="depthHeight">Tree height</label>
+                    <input type="range" min="10" max="1000" value="100" class="slider" id="depthHeight">
+                    <label for="terminalDistance">Distance between terminals</label>
+                    <input type="range" min="15" max="100" value="20" class="slider" id="terminalDistance">
+                    <label for="nodeSize">Size of nodes</label>
+                    <input type="range" min="1" max="100" value="7" class="slider" id="nodeSize">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4 right-container">
+            <div id="output"></div>
+        </div>
+    </div>
+
+
 </div>
-<div id="output"></div>
-<svg></svg>
-<script src="treant-js-master/vendor/raphael.js"></script>
-<script src="treant-js-master/Treant.js"></script>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="script.js"></script>
+<script src="js/d3.v3.min.js"></script>
+<script src="js/script.js"></script>
+<script src="js/svgsaver.min.js"></script>
 
 <script>
-    main();
-    $('#input').bind('input propertychange', main); 
+    var currentRuleTree = 0;
+    $('#download').click(function () {
+        var svgsaver = new SvgSaver();
+        var svg = $('#tree-svg');
+        var width = $('#container')[0].getBoundingClientRect().width;
+        var height = $('#container')[0].getBoundingClientRect().height;
+        svg.attr("width", width + 20 + 'px').attr("height", height + 20 + 'px');
+        $('#container').attr("transform", "translate(20,20)");
+        //svgsaver.asSvg doesnt work with big SVGs so here is a workaround with a blob
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        console.log(svgsaver.getBlob(svg[0]));
+        var blob = svgsaver.getBlob(svg[0]),
+            url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = "tree.svg";
+        a.click();
+        window.URL.revokeObjectURL(url);
+    });
+
+    $('input[type="checkbox"], input[type="range"]').change(function () {
+        if ($('#printTree').is(":checked")) {
+            printTree(ruleSet[currentRuleTree], $('#showRoot').is(":checked"), $('#alignTerminals').is(":checked"),
+                $('#depthHeight').val(),
+                $('#terminalDistance').val()
+                , $('#nodeSize').val());
+        }
+    });
+
+    var markPos = function () {
+        var text = '';
+        if (position > 0) {
+            text = $('#input-text').text().slice(0, position - 1) + '<span class="pointer">'
+                + $('#input-text').text().slice(position - 1, position) + '</span>'
+                + $('#input-text').text().slice(position);
+        }
+        else {
+            text = '<span class="pointer">' + $('#input-text').text().slice(0, 1) + '</span>' + $('#input-text').text().slice(1);
+        }
+        $('#input-text').html(text);
+    };
+
+    $('#edit-text').click(function () {
+        $('#input-text').text($('#input').val());
+        $('#edit-text').toggleClass('glyphicon-edit').toggleClass('glyphicon-ok');
+        $('#input-div').toggleClass('hidden');
+        $('#input-text').toggleClass('hidden');
+        markPos();
+    });
+
+    $('#fast-forward').click(function () {
+        position = $('#input').val().split('').length;
+        markPos();
+        main();
+    });
+
+    $('#fast-back').click(function () {
+        position = 0;
+        markPos();
+        main();
+    });
+
+
+    $('#step-forward').click(function () {
+        if (position < $('#input').val().split('').length) {
+            position++;
+        }
+        markPos();
+        main();
+    });
+
+    $('#step-back').click(function () {
+        if (position > 0) {
+            position--;
+        }
+        markPos();
+        main();
+    });
+
+    $(document).on('click', "span.rule", function () {
+        $(this).toggleClass('expand');
+        currentRuleTree = this.id;
+        if ($('#printTree').is(":checked")) {
+            printTree(ruleSet[currentRuleTree], $('#showRoot').is(":checked"), $('#alignTerminals').is(":checked"));
+        }
+    });
+
+
 </script>
+</body>
